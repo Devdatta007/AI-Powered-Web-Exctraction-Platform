@@ -4,7 +4,7 @@
 
 🌐 **Live Demo:** [https://ai-powered-web-exctraction-platform.onrender.com]([https://ai-powered-web-exctraction-platform.onrender.com]) 
 
----
+
 
 ## Screenshots
 
@@ -20,7 +20,7 @@
 ### Analytics
 ![Analytics](assets/analytics.png)
 
----
+
 
 ## Features
 
@@ -48,10 +48,9 @@ pip install -r requirements.txt
 
 # Start the server
 uvicorn main:app --reload
-```
 
-Then open https:https://ai-powered-web-exctraction-platform.onrender.com
 
----
+Then open:https://ai-powered-web-exctraction-platform.onrender.com
+
 
 © 2026 Nexvora. All rights reserved.
