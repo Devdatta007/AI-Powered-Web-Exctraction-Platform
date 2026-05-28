@@ -49,8 +49,6 @@ pip install -r requirements.txt
 # Start the server
 uvicorn main:app --reload
 
-
 Then open:https://ai-powered-web-exctraction-platform.onrender.com
 
-
-© 2026 Nexvora. All rights reserved.
+© 2026 Nexvora. All Rights Reserved.
