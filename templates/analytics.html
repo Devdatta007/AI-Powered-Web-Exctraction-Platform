@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}Analytics — AI Powered Web Extraction Platform{% endblock %}
+{% block topbar_title %}Extraction Analytics{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <h1 style="font-size:22px;font-weight:700;margin-bottom:4px;">Extraction Analytics</h1>
+    <p style="color:var(--on-surface-var);font-size:14px;">System performance and data processing throughput for this session.</p>
+  </div>
+  <a href="/new-task" class="btn-primary">
+    <span class="material-symbols-outlined" style="font-size:16px;">rocket_launch</span>
+    New Task
+  </a>
+</div>
+
+<div class="kpi-grid mb-6">
+  <div class="card">
+    <div class="card-label">Success Rate</div>
+    <div class="card-value">{{ rate }}%</div>
+    <div style="margin-top:10px;">
+      <div class="progress-bar"><div class="progress-fill" style="width:{{ rate }}%;"></div></div>
+    </div>
+    <div style="margin-top:8px;font-size:12px;color:var(--on-surface-var);">{{ success }} of {{ total }} tasks succeeded</div>
+  </div>
+  <div class="card">
+    <div class="card-label">Total Tasks</div>
+    <div class="card-value">{{ total }}</div>
+    <div style="margin-top:8px;font-size:12px;color:var(--on-surface-var);">Processed this session</div>
+  </div>
+  <div class="card">
+    <div class="card-label">Failed Tasks</div>
+    <div class="card-value" style="color:var(--ruby);">{{ total - success }}</div>
+    <div style="margin-top:8px;font-size:12px;color:var(--on-surface-var);">Returned errors</div>
+  </div>
+  <div class="card">
+    <div class="card-label">API Status</div>
+    <div style="margin-top:8px;display:flex;align-items:center;gap:8px;">
+      <span class="dot dot-cyan"></span>
+      <span style="font-size:16px;font-weight:700;color:var(--cyan);">Operational</span>
+    </div>
+    <div style="margin-top:8px;font-size:12px;color:var(--on-surface-var);">All endpoints healthy</div>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
+  <div class="card">
+    <div class="flex items-center justify-between mb-4">
+      <h3 style="font-size:15px;font-weight:600;">AI Processing Efficiency</h3>
+      <span class="material-symbols-outlined" style="color:var(--cyan);">bolt</span>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div class="flex items-center justify-between mb-2">
+        <span style="font-size:12px;color:var(--on-surface-var);">Schema Matching Accuracy</span>
+        <span class="mono" style="font-size:12px;color:var(--cyan);">94%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:94%;"></div></div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div class="flex items-center justify-between mb-2">
+        <span style="font-size:12px;color:var(--on-surface-var);">NLP Inference Latency</span>
+        <span class="mono" style="font-size:12px;color:var(--amber);">142ms</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:65%;background:var(--amber);"></div></div>
+    </div>
+    <div>
+      <div class="flex items-center justify-between mb-2">
+        <span style="font-size:12px;color:var(--on-surface-var);">OCR Confidence Level</span>
+        <span class="mono" style="font-size:12px;color:var(--cyan);">89%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:89%;"></div></div>
+    </div>
+    <div style="margin-top:20px;padding:12px;background:var(--background);border:1px solid var(--outline-var);border-radius:8px;display:flex;align-items:center;gap:12px;">
+      <span class="material-symbols-outlined" style="color:var(--cyan);font-size:22px;">rocket_launch</span>
+      <div>
+        <p style="font-size:12px;font-weight:600;">Optimization Suggested</p>
+        <p style="font-size:11px;color:var(--on-surface-var);">Use html parser for faster HTML parsing on large pages.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="flex items-center justify-between mb-4">
+      <h3 style="font-size:15px;font-weight:600;">Recent Extractions</h3>
+      <a href="/results" style="font-size:12px;color:var(--cyan);">View All</a>
+    </div>
+    {% if history %}
+      {% for t in history[:8] %}
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:rgba(2,6,23,.4);border-radius:6px;border:1px solid transparent;margin-bottom:8px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="badge badge-success" style="font-size:10px;">{{ t.mode[:4].upper() }}</span>
+          <div>
+            <p style="font-size:12px;font-weight:500;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ t.url }}">{{ t.url }}</p>
+            <p style="font-size:11px;color:var(--on-surface-var);">{{ t.detail }}</p>
+          </div>
+        </div>
+        {% if t.status == 'success' %}
+          <span class="material-symbols-outlined" style="color:var(--cyan);font-size:18px;">done_all</span>
+        {% else %}
+          <span class="material-symbols-outlined" style="color:var(--ruby);font-size:18px;">error</span>
+        {% endif %}
+      </div>
+      {% endfor %}
+    {% else %}
+      <div style="text-align:center;padding:32px;color:var(--on-surface-var);">
+        <span class="material-symbols-outlined" style="font-size:36px;display:block;margin-bottom:8px;color:var(--outline-var);">inbox</span>
+        No extractions yet.
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% if history %}
+<div class="card">
+  <h3 style="font-size:15px;font-weight:600;margin-bottom:16px;">Extraction Mode Breakdown</h3>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;">
+    {% set modes = {} %}
+    {% for t in history %}
+      {% if t.mode in modes %}
+        {% set _ = modes.update({t.mode: modes[t.mode] + 1}) %}
+      {% else %}
+        {% set _ = modes.update({t.mode: 1}) %}
+      {% endif %}
+    {% endfor %}
+    {% for mode, count in modes.items() %}
+    <div style="background:var(--deep-navy);border:1px solid var(--outline-var);border-radius:8px;padding:10px 16px;display:flex;align-items:center;gap:8px;">
+      <span class="dot dot-cyan"></span>
+      <span style="font-size:13px;">{{ mode }}</span>
+      <span class="mono" style="font-size:12px;color:var(--cyan);margin-left:4px;">×{{ count }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+{% endblock %}

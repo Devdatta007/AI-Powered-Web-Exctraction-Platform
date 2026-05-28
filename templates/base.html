@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}AI Powered Web Extraction Platform{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <svg width="28" height="28" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M256 120V40M256 392V472M352 160L410 102M160 352L102 410M392 256H472M120 256H40M352 352L410 410M160 160L102 102" stroke="#22D3EE" stroke-width="32" stroke-linecap="round"/>
+      <circle cx="256" cy="256" r="80" stroke="#22D3EE" stroke-width="28"/>
+      <circle cx="256" cy="256" r="30" fill="#22D3EE" class="pulse-dot"/>
+    </svg>
+    <div class="logo-text-block">
+      <span class="logo-text">AI Powered</span>
+      <span class="logo-subtext">Web Extraction Platform</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a href="/" class="nav-item {% if active == 'dashboard' %}active{% endif %}">
+      <span class="material-symbols-outlined">dashboard</span>
+      <span>Dashboard</span>
+    </a>
+    <a href="/new-task" class="nav-item {% if active == 'new-task' %}active{% endif %}">
+      <span class="material-symbols-outlined">add_circle</span>
+      <span>New Task</span>
+    </a>
+    <a href="/results" class="nav-item {% if active == 'results' %}active{% endif %}">
+      <span class="material-symbols-outlined">table_view</span>
+      <span>Results</span>
+    </a>
+    <a href="/analytics" class="nav-item {% if active == 'analytics' %}active{% endif %}">
+      <span class="material-symbols-outlined">analytics</span>
+      <span>Analytics</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <a href="/new-task" class="btn-primary sidebar-cta">
+      <span class="material-symbols-outlined">rocket_launch</span>
+      Start Extraction
+    </a>
+    <a href="https://github.com/Devdatta007/AI-Powered-Web-Exctraction-Platform" target="_blank" class="nav-item">
+      <span class="material-symbols-outlined">contact_support</span>
+      <span>Support</span>
+    </a>
+  </div>
+</aside>
+
+<!-- Main -->
+<div class="main-wrapper">
+  <header class="topbar">
+    <h2 class="topbar-title">{% block topbar_title %}AI Powered Web Extraction Platform{% endblock %}</h2>
+    <div class="topbar-right">
+      <span class="status-dot"></span>
+      <span class="status-label">System Operational</span>
+    </div>
+  </header>
+
+  <main class="content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <span>© 2026 Nexvora. All rights reserved.</span>
+  </footer>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

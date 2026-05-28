@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}New Task — AI Powered Web Extraction Platform{% endblock %}
+{% block topbar_title %}New Extraction Task{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+  <h1 style="font-size:22px;font-weight:700;margin-bottom:4px;">Configure Extraction</h1>
+  <p style="color:var(--on-surface-var);font-size:14px;">Enter a URL and choose what to extract. Results appear below instantly.</p>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;">
+
+  <!-- Left: form -->
+  <div class="card">
+    <form id="scrape-form" method="post" action="/api/extract/text">
+
+      <div class="form-group">
+        <label for="url">Target URL</label>
+        <input type="url" id="url" name="url" placeholder="https://example.com" required/>
+      </div>
+
+      <div class="form-group">
+        <label for="mode">Extraction Mode</label>
+        <select id="mode" name="mode" onchange="updateAction(this.value)">
+          <optgroup label="Text Extraction">
+            <option value="/api/extract/links">Embedded Links</option>
+            <option value="/api/extract/text" selected>Main Website Text</option>
+            <option value="/api/extract/text-with-links">Text + Linked Pages Text</option>
+            <option value="/api/extract/complete-text">Complete Website Text</option>
+          </optgroup>
+          <optgroup label="PDF Extraction">
+            <option value="/api/extract/pdf-text">Extract Text from PDF Link</option>
+            <option value="/api/extract/pdf-with-links">Main PDF + Linked PDFs</option>
+            <option value="/api/extract/complete-pdf">Complete Website PDF Data</option>
+            <option value="/api/extract/complete-text-pdf">Complete Text + PDF Data</option>
+          </optgroup>
+          <optgroup label="File Downloads">
+            <option value="/api/download/pdfs">Download PDFs (Main Page)</option>
+            <option value="/api/download/all-pdfs">Download All PDFs (Full Site)</option>
+            <option value="/api/download/images">Download Images (Main Page)</option>
+            <option value="/api/download/all-images">Download All Images (Full Site)</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="flex gap-3 mt-6">
+        <button type="submit" class="btn-primary" style="flex:1;justify-content:center;">
+          <span class="material-symbols-outlined" style="font-size:18px;">rocket_launch</span>
+          Run Extraction
+        </button>
+      </div>
+    </form>
+
+    <div id="mode-desc" style="margin-top:20px;padding:14px;background:var(--deep-navy);border:1px solid var(--outline-var);border-radius:8px;font-size:12px;color:var(--on-surface-var);line-height:1.6;">
+      Gathers and presents the primary textual content from the main website.
+    </div>
+  </div>
+
+  <!-- Right: result -->
+  <div>
+    <div class="flex items-center justify-between mb-3">
+      <h3 style="font-size:14px;font-weight:600;color:var(--on-surface-var);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.06em;">Output</h3>
+      <div class="flex gap-2 items-center">
+        <div id="result-loader" class="spinner hidden"></div>
+        <button id="copy-btn" class="btn-ghost" onclick="copyResult('result-output')" style="font-size:12px;padding:5px 10px;">Copy</button>
+        <button id="download-btn" class="btn-ghost hidden" style="font-size:12px;padding:5px 10px;">
+          <span class="material-symbols-outlined" style="font-size:14px;">download</span>
+          Save .txt
+        </button>
+      </div>
+    </div>
+
+    <div class="flex gap-3 mb-3">
+      <div style="background:var(--deep-navy);border:1px solid var(--outline-var);border-radius:6px;padding:8px 14px;font-size:12px;font-family:'JetBrains Mono',monospace;">
+        Items: <span id="result-count" style="color:var(--cyan);">—</span>
+      </div>
+      <div style="background:var(--deep-navy);border:1px solid var(--outline-var);border-radius:6px;padding:8px 14px;font-size:12px;font-family:'JetBrains Mono',monospace;">
+        Time: <span id="result-elapsed" style="color:var(--cyan);">—</span>
+      </div>
+    </div>
+
+    <div id="result-output" class="result-box" style="min-height:360px;">
+      Extraction output will appear here...
+    </div>
+  </div>
+
+</div>
+
+<script>
+const modeDescriptions = {
+  '/api/extract/links':          'Extracts and lists all hyperlinks found on the target page.',
+  '/api/extract/text':           'Gathers and presents the primary textual content from the main website.',
+  '/api/extract/text-with-links':'Combines main website text with text scraped from embedded linked pages.',
+  '/api/extract/complete-text':  'Retrieves and displays the entire textual content across the website and its links.',
+  '/api/extract/pdf-text':       'Retrieves and extracts text from a PDF file at the provided URL.',
+  '/api/extract/pdf-with-links': 'Merges PDF text from the main page with PDF data from embedded links.',
+  '/api/extract/complete-pdf':   'Captures and retrieves all PDF data available across the entire website.',
+  '/api/extract/complete-text-pdf': 'Presents a comprehensive view of both textual and PDF data from the entire website.',
+  '/api/download/pdfs':          'Downloads all PDF files found on the main page as a ZIP archive.',
+  '/api/download/all-pdfs':      'Bulk downloads all PDF files found across the entire website as a ZIP archive.',
+  '/api/download/images':        'Downloads all image files found on the main page as a ZIP archive.',
+  '/api/download/all-images':    'Bulk downloads all image files found across the entire website as a ZIP archive.',
+};
+
+function updateAction(val) {
+  document.getElementById('scrape-form').setAttribute('action', val);
+  const desc = document.getElementById('mode-desc');
+  if (desc) desc.textContent = modeDescriptions[val] || '';
+}
+
+updateAction(document.getElementById('mode').value);
+</script>
+{% endblock %}

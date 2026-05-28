@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Results — AI Powered Web Extraction Platform{% endblock %}
+{% block topbar_title %}Extraction Results{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <h1 style="font-size:22px;font-weight:700;margin-bottom:4px;">All Extraction Results</h1>
+    <p style="color:var(--on-surface-var);font-size:14px;">Full history of every task run in this session.</p>
+  </div>
+  <a href="/new-task" class="btn-primary">
+    <span class="material-symbols-outlined" style="font-size:16px;">add_circle</span>
+    New Task
+  </a>
+</div>
+
+{% if history %}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Entity ID</th>
+        <th>Source URL</th>
+        <th>Mode</th>
+        <th>Status</th>
+        <th>Detail</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in history %}
+      <tr>
+        <td class="mono text-cyan">{{ t.id }}</td>
+        <td class="mono" style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ t.url }}">
+          <a href="{{ t.url }}" target="_blank" style="color:var(--on-surface);">{{ t.url }}</a>
+        </td>
+        <td><span class="badge badge-success">{{ t.mode }}</span></td>
+        <td>
+          {% if t.status == 'success' %}
+            <span class="flex items-center gap-2" style="font-size:12px;color:var(--cyan);">
+              <span class="dot dot-cyan"></span> Verified
+            </span>
+          {% else %}
+            <span class="flex items-center gap-2" style="font-size:12px;color:var(--ruby);">
+              <span class="dot dot-ruby"></span> Error
+            </span>
+          {% endif %}
+        </td>
+        <td style="font-size:12px;color:var(--on-surface-var);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ t.detail }}</td>
+        <td class="mono" style="font-size:11px;color:var(--on-surface-var);">{{ t.ts }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="kpi-grid mt-6">
+  <div class="card">
+    <div class="card-label">Schema Alignment</div>
+    <div class="card-value">
+      {% set s = history | selectattr('status','equalto','success') | list | length %}
+      {% set total = history | length %}
+      {% if total > 0 %}{{ ((s / total) * 100) | round(1) }}%{% else %}—{% endif %}
+    </div>
+    <div style="margin-top:8px;font-size:12px;color:var(--on-surface-var);">Success rate this session</div>
+  </div>
+  <div class="card">
+    <div class="card-label">Throughput</div>
+    <div class="card-value">{{ history | length }}</div>
+    <div style="margin-top:8px;font-size:12px;color:var(--on-surface-var);">Total tasks processed</div>
+  </div>
+  <div class="card">
+    <div class="card-label">PII Redaction</div>
+    <div class="card-value" style="font-size:18px;color:var(--cyan);">Enabled</div>
+    <div style="margin-top:8px;font-size:12px;color:var(--on-surface-var);">Scripts & styles stripped from all output</div>
+  </div>
+</div>
+
+{% else %}
+<div class="card" style="text-align:center;padding:64px;">
+  <span class="material-symbols-outlined" style="font-size:56px;color:var(--outline-var);display:block;margin-bottom:16px;">table_view</span>
+  <p style="color:var(--on-surface-var);margin-bottom:16px;">No extraction results yet.</p>
+  <a href="/new-task" class="btn-primary" style="display:inline-flex;">
+    <span class="material-symbols-outlined" style="font-size:16px;">rocket_launch</span>
+    Start First Extraction
+  </a>
+</div>
+{% endif %}
+{% endblock %}

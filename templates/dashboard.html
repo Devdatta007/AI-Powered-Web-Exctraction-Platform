@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — AI Powered Web Extraction Platform{% endblock %}
+{% block topbar_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+  <h1 style="font-size:26px;font-weight:700;color:var(--on-surface);margin-bottom:4px;">AI Powered Web Extraction Platform</h1>
+  <p style="color:var(--on-surface-var);font-size:14px;">Extract text, PDFs, and images from any website — powered by AI. Built by Nexvora.</p>
+</div>
+
+<!-- KPI row -->
+<div class="kpi-grid">
+  <div class="card">
+    <div class="card-label">Total Tasks</div>
+    <div class="card-value">{{ history | length }}</div>
+    <div style="margin-top:8px;font-size:12px;color:var(--on-surface-var);">All time extractions</div>
+  </div>
+  <div class="card">
+    <div class="card-label">Successful</div>
+    <div class="card-value" style="color:var(--cyan);">
+      {{ history | selectattr('status','equalto','success') | list | length }}
+    </div>
+    <div style="margin-top:8px;font-size:12px;color:var(--on-surface-var);">Completed without error</div>
+  </div>
+  <div class="card">
+    <div class="card-label">Failed</div>
+    <div class="card-value" style="color:var(--ruby);">
+      {{ history | selectattr('status','equalto','error') | list | length }}
+    </div>
+    <div style="margin-top:8px;font-size:12px;color:var(--on-surface-var);">Returned an error</div>
+  </div>
+  <div class="card">
+    <div class="card-label">Quick Start</div>
+    <div style="margin-top:12px;">
+      <a href="/new-task" class="btn-primary" style="font-size:13px;padding:8px 16px;">
+        <span class="material-symbols-outlined" style="font-size:16px;">add_circle</span>
+        New Task
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Recent tasks table -->
+<div class="flex items-center justify-between mb-4">
+  <h2 style="font-size:16px;font-weight:600;">Recent Tasks</h2>
+  <a href="/results" style="font-size:13px;color:var(--cyan);">View all →</a>
+</div>
+
+{% if history %}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>URL</th>
+        <th>Mode</th>
+        <th>Status</th>
+        <th>Detail</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in history %}
+      <tr>
+        <td class="mono text-cyan">{{ t.id }}</td>
+        <td class="mono" style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ t.url }}">{{ t.url }}</td>
+        <td><span class="badge badge-success">{{ t.mode }}</span></td>
+        <td>
+          {% if t.status == 'success' %}
+            <span class="dot dot-cyan"></span> <span style="font-size:12px;color:var(--cyan);">Success</span>
+          {% else %}
+            <span class="dot dot-ruby"></span> <span style="font-size:12px;color:var(--ruby);">Error</span>
+          {% endif %}
+        </td>
+        <td style="font-size:12px;color:var(--on-surface-var);">{{ t.detail }}</td>
+        <td class="mono" style="font-size:11px;color:var(--on-surface-var);">{{ t.ts }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="card" style="text-align:center;padding:48px;">
+  <span class="material-symbols-outlined" style="font-size:48px;color:var(--outline-var);display:block;margin-bottom:12px;">inbox</span>
+  <p style="color:var(--on-surface-var);">No tasks yet. <a href="/new-task" style="color:var(--cyan);">Start your first extraction →</a></p>
+</div>
+{% endif %}
+{% endblock %}
