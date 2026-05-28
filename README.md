@@ -2,7 +2,7 @@
 
 > Extract text, links, PDFs, and images from any website — powered by AI. Built by Nexvora.
 
-🌐 **Live Demo:** [https://ai-powered-web-exctraction-platform.onrender.com]([https://ai-powered-web-exctraction-platform.onrender.com]) 
+🌐 **Live Demo:** https://ai-powered-web-exctraction-platform.onrender.com/
 
 
 
@@ -49,6 +49,6 @@ pip install -r requirements.txt
 # Start the server
 uvicorn main:app --reload
 
-Then open:https://ai-powered-web-exctraction-platform.onrender.com
+Then open:https://ai-powered-web-exctraction-platform.onrender.com/
 
 © 2026 Nexvora. All Rights Reserved.
